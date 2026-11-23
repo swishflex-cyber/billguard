@@ -10,7 +10,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 function App() {
   const [currency, setCurrency] = useState(() => localStorage.getItem('billguard_currency') || '₱');
   const [savings, setSavings] = useState(() => parseFloat(localStorage.getItem('billguard_savings')) || 0);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' or 'checklist'
   const [selectedList, setSelectedList] = useState('monthly');
 
   const [bills, setBills] = useState(() => {
@@ -39,42 +39,35 @@ function App() {
     setBills(bills.map(b => b.id === bill.id ? { ...b, dueDate: nextDueDateStr } : b));
   };
 
-  // ---- NEW: Refresh function ----
   const handleRefresh = () => {
     window.location.reload();
   };
 
   return (
     <div className="app">
+      {/* HEADER BAR - Cleaned up, no menu dropdown */}
       <header className="app-header">
         <div className="header-top">
-          <button 
-            className="menu-btn" 
-            onClick={() => setActiveTab(activeTab === 'dashboard' ? 'checklist' : 'dashboard')}
-          >
-            {activeTab === 'checklist' ? '✕ Close' : '☰ Menu'}
-          </button>
-          
           <h1>BillGuard</h1>
-
-          <select 
-            className="currency-select-top"
-            value={currency} 
-            onChange={(e) => setCurrency(e.target.value)}
-          >
-            <option value="₱">₱</option>
-            <option value="$">$</option>
-            <option value="€">€</option>
-            <option value="£">£</option>
-          </select>
-
-          {/* NEW REFRESH BUTTON (right side) */}
-          <button className="refresh-btn" onClick={handleRefresh}>
-            Refresh
-          </button>
+          <div className="header-controls">
+            <select 
+              className="currency-select-top"
+              value={currency} 
+              onChange={(e) => setCurrency(e.target.value)}
+            >
+              <option value="₱">₱</option>
+              <option value="$">$</option>
+              <option value="€">€</option>
+              <option value="£">£</option>
+            </select>
+            <button className="refresh-btn" onClick={handleRefresh}>
+              Refresh
+            </button>
+          </div>
         </div>
       </header>
 
+      {/* NAV SWITCHER – Dashboard + Master Checklist */}
       <div className="tab-switcher-nav">
         <button 
           className={`nav-tab-btn ${activeTab === 'dashboard' ? 'active-tab' : ''}`}
@@ -86,36 +79,60 @@ function App() {
           className={`nav-tab-btn ${activeTab === 'checklist' ? 'active-tab' : ''}`}
           onClick={() => setActiveTab('checklist')}
         >
-          📋 Master Checklist ({bills.length})
+          📋 Master Checklist
         </button>
-
-        {activeTab === 'dashboard' && (
-          <>
-            <button 
-              className={`nav-tab-btn ${selectedList === 'monthly' ? 'active-tab' : ''}`}
-              onClick={() => setSelectedList('monthly')}
-            >
-              📅 Monthly
-            </button>
-            <button 
-              className={`nav-tab-btn ${selectedList === 'quarterly' ? 'active-tab' : ''}`}
-              onClick={() => setSelectedList('quarterly')}
-            >
-              🗓️ Quarterly
-            </button>
-            <button 
-              className={`nav-tab-btn ${selectedList === 'yearly' ? 'active-tab' : ''}`}
-              onClick={() => setSelectedList('yearly')}
-            >
-              🎆 Yearly
-            </button>
-          </>
-        )}
       </div>
 
+      {/* DASHBOARD VIEW */}
+      {activeTab === 'dashboard' && (
+        <div className="dashboard">
+          <SavingsTracker 
+            savings={savings} 
+            setSavings={setSavings} 
+            currency={currency} 
+          />
+          
+          {/* Month Tabs for filtering bills */}
+          <div className="month-tab-row">
+            <button 
+              className={`month-tab-btn ${selectedList === 'monthly' ? 'active' : ''}`}
+              onClick={() => setSelectedList('monthly')}
+            >
+              Monthly
+            </button>
+            <button 
+              className={`month-tab-btn ${selectedList === 'quarterly' ? 'active' : ''}`}
+              onClick={() => setSelectedList('quarterly')}
+            >
+              Quarterly
+            </button>
+            <button 
+              className={`month-tab-btn ${selectedList === 'yearly' ? 'active' : ''}`}
+              onClick={() => setSelectedList('yearly')}
+            >
+              Yearly
+            </button>
+          </div>
+
+          <BillForm 
+            onAddBill={handleAddBill} 
+            currency={currency} 
+          />
+          
+          <BillList 
+            bills={bills} 
+            onDeleteBill={handleDeleteBill} 
+            onMarkPaid={handleMarkPaid} 
+            currency={currency} 
+            selectedList={selectedList}
+          />
+        </div>
+      )}
+
+      {/* MASTER CHECKLIST VIEW */}
       {activeTab === 'checklist' && (
         <div className="history-section">
-          <h3>📋 Automated Master Checklist</h3>
+          <h3 className="list-title">📋 Master Checklist</h3>
           <p className="checklist-sub">100% Automatic tracking derived from due dates:</p>
           
           {bills.length === 0 ? (
@@ -131,6 +148,7 @@ function App() {
           ) : (
             <div className="master-checklist">
               {bills.map((bill) => {
+                // Determine which year cycle this bill belongs to based on its current due date
                 const dateStr = bill.dueDate || bill.lastPaid || '2026-01-01';
                 const [yStr, mStr] = dateStr.split('-');
                 const dueYear = parseInt(yStr, 10);
@@ -141,7 +159,9 @@ function App() {
                     <div className="card-top-info">
                       <div className="card-info-left">
                         <strong className="cl-name">{bill.name}</strong>
-                        <span className="cl-amount">{currency}{bill.amount.toFixed(2)} — <span className="cl-freq">{bill.frequency}</span></span>
+                        <span className="cl-amount">
+                          {currency}{bill.amount.toFixed(2)} — <span className="cl-freq">{bill.frequency}</span>
+                        </span>
                       </div>
                       <span className="year-badge">{dueYear} Cycle</span>
                     </div>
@@ -152,6 +172,9 @@ function App() {
                         let statusClass = 'chip-unpaid';
                         let label = m;
 
+                        // Logic: If month number is less than the current due month, it's paid in this cycle
+                        // If it equals the due month, it's currently due
+                        // If it is greater, it is unpaid
                         if (monthNumber < dueMonth) {
                           statusClass = 'chip-paid';
                           label = `✓ ${m}`;
@@ -175,29 +198,6 @@ function App() {
               })}
             </div>
           )}
-        </div>
-      )}
-
-      {activeTab === 'dashboard' && (
-        <div className="dashboard">
-          <SavingsTracker 
-            savings={savings} 
-            setSavings={setSavings} 
-            currency={currency} 
-          />
-          
-          <BillForm 
-            onAddBill={handleAddBill} 
-            currency={currency} 
-          />
-          
-          <BillList 
-            bills={bills} 
-            onDeleteBill={handleDeleteBill} 
-            onMarkPaid={handleMarkPaid} 
-            currency={currency} 
-            selectedList={selectedList}
-          />
         </div>
       )}
     </div>
