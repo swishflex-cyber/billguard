@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
 
-/* GLOBAL RESETS & MOBILE SAFETY */
+/* GLOBAL RESETS */
 * { 
   box-sizing: border-box; 
   -webkit-font-smoothing: antialiased; 
@@ -13,7 +13,7 @@ body {
   margin: 0; 
   padding: 0; 
   min-height: 100vh;
-  overflow-x: hidden; /* CRITICAL: Prevents horizontal white overflow */
+  overflow-x: hidden;
 }
 
 .app { 
@@ -75,19 +75,21 @@ body {
   flex-shrink: 0;
 }
 
-/* NAV TAB SWITCHER */
+/* NAV TAB SWITCHER (Dashboard, Checklist, Monthly, etc.) */
 .tab-switcher-nav {
   display: flex; 
   gap: 10px; 
   margin-bottom: 20px;
   overflow-x: auto; 
-  scrollbar-width: none;
+  flex-wrap: nowrap;
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 5px;
 }
 .tab-switcher-nav::-webkit-scrollbar { display: none; }
 
 .nav-tab-btn {
-  flex: 1; 
-  padding: 12px; 
+  flex-shrink: 0; 
+  padding: 10px 14px; 
   border-radius: 14px; 
   border: 1px solid #1e293b;
   background: #151c2c; 
@@ -104,6 +106,37 @@ body {
   color: white; 
   border-color: #3b82f6;
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* MONTH TABS (Jan, Feb, Mar...) */
+.month-tab-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 15px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  scrollbar-width: none; /* Firefox */
+}
+.month-tab-row::-webkit-scrollbar { display: none; }
+
+.month-tab-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  background: #151c2c;
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+  min-width: 45px;
+}
+
+.month-tab-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
 }
 
 /* CARDS */
@@ -189,11 +222,6 @@ input, select {
   padding-bottom: 8px; 
 }
 
-.mt { 
-  margin-top: 20px; 
-}
-
-/* Bill Card Item - Compact Layout */
 .bill-card-item {
   display: flex; 
   align-items: center; 
@@ -206,14 +234,14 @@ input, select {
   min-height: auto;
 }
 
-/* SMALLER DELETE & PAID BUTTONS */
+/* DELETE & PAID BUTTONS */
 .huge-action-btn {
-  height: 45px !important;
-  width: 55px !important;
+  height: 45px;
+  width: 55px;
   flex-shrink: 0; 
   border-radius: 10px;
   font-weight: 800; 
-  font-size: 0.7rem; /* Smaller text to fit in small button */
+  font-size: 0.7rem; 
   color: white; 
   border: none; 
   cursor: pointer;
@@ -225,12 +253,8 @@ input, select {
   padding: 4px;
 }
 
-.delete-bg { 
-  background-color: #ef4444; 
-} 
-.paid-bg { 
-  background-color: #059669; 
-}
+.delete-bg { background-color: #ef4444; } 
+.paid-bg { background-color: #059669; }
 
 .bill-details { 
   flex-grow: 1; 
@@ -261,7 +285,7 @@ input, select {
   margin-top: 2px; 
 }
 
-/* 12-MONTH MATRIX CHECKLIST STYLES */
+/* 12-MONTH MATRIX CHECKLIST (Master Tab) */
 .checklist-sub { 
   color: #94a3b8; 
   font-size: 0.85rem; 
@@ -327,7 +351,6 @@ input, select {
   flex-shrink: 0;
 }
 
-/* 12 MONTH GRID - 4 COLUMNS FOR MOBILE */
 .month-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
@@ -384,11 +407,4 @@ input, select {
   font-size: 0.95rem; 
   padding: 10px; 
   margin-bottom: 15px;
-}
-
-/* MOBILE OVERRIDE - Extra safety for very small screens */
-@media (max-width: 375px) {
-  .app-header h1 { font-size: 1.2rem; }
-  .huge-action-btn { height: 40px; width: 50px; font-size: 0.65rem; }
-  .savings-amount { font-size: 1.8rem; }
 }
