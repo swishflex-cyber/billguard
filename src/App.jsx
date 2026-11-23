@@ -11,7 +11,7 @@ function App() {
   const [currency, setCurrency] = useState(() => localStorage.getItem('billguard_currency') || '₱');
   const [savings, setSavings] = useState(() => parseFloat(localStorage.getItem('billguard_savings')) || 0);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedList, setSelectedList] = useState('monthly'); // default monthly
+  const [selectedList, setSelectedList] = useState('monthly');
 
   const [bills, setBills] = useState(() => {
     const saved = localStorage.getItem('billguard_bills');
@@ -39,9 +39,13 @@ function App() {
     setBills(bills.map(b => b.id === bill.id ? { ...b, dueDate: nextDueDateStr } : b));
   };
 
+  // ---- NEW: Refresh function ----
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="app">
-      {/* HEADER BAR */}
       <header className="app-header">
         <div className="header-top">
           <button 
@@ -63,10 +67,14 @@ function App() {
             <option value="€">€</option>
             <option value="£">£</option>
           </select>
+
+          {/* NEW REFRESH BUTTON (right side) */}
+          <button className="refresh-btn" onClick={handleRefresh}>
+            Refresh
+          </button>
         </div>
       </header>
 
-      {/* NAV SWITCHER */}
       <div className="tab-switcher-nav">
         <button 
           className={`nav-tab-btn ${activeTab === 'dashboard' ? 'active-tab' : ''}`}
@@ -81,7 +89,6 @@ function App() {
           📋 Master Checklist ({bills.length})
         </button>
 
-        {/* NEW TOP-LEVEL LIST TABS – only visible on Dashboard */}
         {activeTab === 'dashboard' && (
           <>
             <button 
@@ -106,7 +113,6 @@ function App() {
         )}
       </div>
 
-      {/* TAB 1: AUTOMATED 12-MONTH MASTER CHECKLIST */}
       {activeTab === 'checklist' && (
         <div className="history-section">
           <h3>📋 Automated Master Checklist</h3>
@@ -155,7 +161,10 @@ function App() {
                         }
 
                         return (
-                          <div key={m} className={`month-chip ${statusClass}`}>
+                          <div 
+                            key={m} 
+                            className={`month-chip ${statusClass}`}
+                          >
                             {label}
                           </div>
                         );
@@ -169,7 +178,6 @@ function App() {
         </div>
       )}
 
-      {/* TAB 2: MAIN DASHBOARD */}
       {activeTab === 'dashboard' && (
         <div className="dashboard">
           <SavingsTracker 
