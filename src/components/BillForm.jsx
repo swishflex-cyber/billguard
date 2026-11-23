@@ -28,7 +28,7 @@ function BillForm({ onAddBill }) {
     <form className="bill-form" onSubmit={handleSubmit}>
       <h3>Add New Bill</h3>
       <input type="text" placeholder="Bill Name (e.g., Water)" value={name} onChange={(e) => setName(e.target.value)} />
-      <input type="number" placeholder="Amount ($)" value={amount} onChange={(e) => setAmount(e.target.value)} step="0.01" />
+      <input type="number" placeholder="Amount (₱)" value={amount} onChange={(e) => setAmount(e.target.value)} step="0.01" />
       <input type="date" value={lastPaid} onChange={(e) => setLastPaid(e.target.value)} />
       <select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
         <option value="monthly">Monthly</option>
