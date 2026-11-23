@@ -11,7 +11,8 @@ function App() {
   const [currency, setCurrency] = useState(() => localStorage.getItem('billguard_currency') || '₱');
   const [savings, setSavings] = useState(() => parseFloat(localStorage.getItem('billguard_savings')) || 0);
   const [activeTab, setActiveTab] = useState('dashboard');
-  
+  const [selectedList, setSelectedList] = useState('monthly'); // default monthly
+
   const [bills, setBills] = useState(() => {
     const saved = localStorage.getItem('billguard_bills');
     return saved ? JSON.parse(saved) : [];
@@ -31,15 +32,10 @@ function App() {
     setBills(bills.filter(bill => bill.id !== id));
   };
 
-  // ONE-CLICK PAID LOGIC: Deduct Savings + Advance Due Date
   const handleMarkPaid = (bill) => {
-    // 1. Deduct amount from savings
     setSavings(prev => prev - bill.amount);
-
-    // 2. Advance due date forward to next cycle
     const currentDueDate = bill.dueDate || bill.lastPaid;
     const nextDueDateStr = advanceDueDate(currentDueDate, bill.frequency);
-
     setBills(bills.map(b => b.id === bill.id ? { ...b, dueDate: nextDueDateStr } : b));
   };
 
@@ -84,6 +80,30 @@ function App() {
         >
           📋 Master Checklist ({bills.length})
         </button>
+
+        {/* NEW TOP-LEVEL LIST TABS – only visible on Dashboard */}
+        {activeTab === 'dashboard' && (
+          <>
+            <button 
+              className={`nav-tab-btn ${selectedList === 'monthly' ? 'active-tab' : ''}`}
+              onClick={() => setSelectedList('monthly')}
+            >
+              📅 Monthly
+            </button>
+            <button 
+              className={`nav-tab-btn ${selectedList === 'quarterly' ? 'active-tab' : ''}`}
+              onClick={() => setSelectedList('quarterly')}
+            >
+              🗓️ Quarterly
+            </button>
+            <button 
+              className={`nav-tab-btn ${selectedList === 'yearly' ? 'active-tab' : ''}`}
+              onClick={() => setSelectedList('yearly')}
+            >
+              🎆 Yearly
+            </button>
+          </>
+        )}
       </div>
 
       {/* TAB 1: AUTOMATED 12-MONTH MASTER CHECKLIST */}
@@ -108,19 +128,18 @@ function App() {
                 const dateStr = bill.dueDate || bill.lastPaid || '2026-01-01';
                 const [yStr, mStr] = dateStr.split('-');
                 const dueYear = parseInt(yStr, 10);
-                const dueMonth = parseInt(mStr, 10); // 1-12
+                const dueMonth = parseInt(mStr, 10);
 
                 return (
                   <div key={bill.id} className="checklist-card">
                     <div className="card-top-info">
-                      <div>
+                      <div className="card-info-left">
                         <strong className="cl-name">{bill.name}</strong>
                         <span className="cl-amount">{currency}{bill.amount.toFixed(2)} — <span className="cl-freq">{bill.frequency}</span></span>
                       </div>
                       <span className="year-badge">{dueYear} Cycle</span>
                     </div>
 
-                    {/* 12-MONTH AUTOMATED GRID */}
                     <div className="month-grid">
                       {MONTHS.map((m, index) => {
                         const monthNumber = index + 1;
@@ -136,10 +155,7 @@ function App() {
                         }
 
                         return (
-                          <div 
-                            key={m} 
-                            className={`month-chip ${statusClass}`}
-                          >
+                          <div key={m} className={`month-chip ${statusClass}`}>
                             {label}
                           </div>
                         );
@@ -172,6 +188,7 @@ function App() {
             onDeleteBill={handleDeleteBill} 
             onMarkPaid={handleMarkPaid} 
             currency={currency} 
+            selectedList={selectedList}
           />
         </div>
       )}
