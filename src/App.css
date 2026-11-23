@@ -494,3 +494,20 @@ button.deposit-btn {
   padding: 10px; 
   margin-bottom: 15px;
 }
+
+/* REFRESH BUTTON */
+.refresh-btn {
+  background: #151c2c;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: #1e293b;
+}
