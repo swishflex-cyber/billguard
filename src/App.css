@@ -11,15 +11,15 @@ body {
   color: #f8fafc; 
   font-family: 'Plus Jakarta Sans', sans-serif; 
   margin: 0; 
-  padding: 0; /* Removed global padding, added to .app instead */
+  padding: 0; 
   min-height: 100vh;
-  overflow-x: hidden; /* CRITICAL: Prevents horizontal scroll/white overflow */
+  overflow-x: hidden; /* CRITICAL: Prevents horizontal white overflow */
 }
 
 .app { 
   max-width: 600px; 
   margin: 0 auto; 
-  padding: 15px; /* Added padding here instead of body */
+  padding: 15px; 
   min-height: 100vh;
 }
 
@@ -36,14 +36,14 @@ body {
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
-  gap: 10px; /* Reduced gap for mobile */
+  gap: 10px; 
 }
 
 .menu-btn { 
   background: #1e293b; 
   border: 1px solid #334155; 
   color: white; 
-  padding: 8px 12px; /* Reduced padding */
+  padding: 8px 12px; 
   border-radius: 10px; 
   cursor: pointer; 
   font-size: 0.9rem; 
@@ -53,7 +53,7 @@ body {
 }
 
 .app-header h1 { 
-  font-size: 1.4rem; /* Smaller title */
+  font-size: 1.4rem; 
   font-weight: 800; 
   margin: 0; 
   background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%); 
@@ -64,7 +64,7 @@ body {
 }
 
 .currency-select-top { 
-  font-size: 0.9rem; /* Smaller select */
+  font-size: 0.9rem; 
   padding: 6px 8px; 
   border-radius: 8px; 
   background: #0b0f19; 
@@ -80,20 +80,20 @@ body {
   display: flex; 
   gap: 10px; 
   margin-bottom: 20px;
-  overflow-x: auto; /* Allows tabs to scroll if screen is very narrow */
+  overflow-x: auto; 
   scrollbar-width: none;
 }
 .tab-switcher-nav::-webkit-scrollbar { display: none; }
 
 .nav-tab-btn {
   flex: 1; 
-  padding: 12px; /* Reduced padding */
+  padding: 12px; 
   border-radius: 14px; 
   border: 1px solid #1e293b;
   background: #151c2c; 
   color: #94a3b8; 
   font-weight: 800; 
-  font-size: 0.9rem; /* Smaller text */
+  font-size: 0.9rem; 
   cursor: pointer; 
   transition: 0.2s;
   white-space: nowrap;
@@ -110,19 +110,19 @@ body {
 .dashboard, .history-section { 
   display: flex; 
   flex-direction: column; 
-  gap: 15px; /* Reduced gap */
+  gap: 15px; 
 }
 
 .savings-card, .bill-form, .bill-list-wrapper, .history-section { 
   background: #151c2c; 
   border: 1px solid #1e293b; 
-  border-radius: 20px; /* Slightly less rounded */
-  padding: 18px; /* Reduced padding */
+  border-radius: 20px; 
+  padding: 18px; 
 }
 
 /* SAVINGS & DEPOSIT */
 .savings-amount { 
-  font-size: 2rem; /* Reduced from 2.3rem */
+  font-size: 2rem; 
   font-weight: 900; 
   color: #34d399; 
   text-align: center; 
@@ -134,7 +134,7 @@ body {
 .savings-form { 
   display: flex; 
   gap: 10px; 
-  flex-wrap: wrap; /* Allows buttons to wrap if screen is tiny */
+  flex-wrap: wrap; 
 }
 
 .savings-form button, button.deposit-btn {
@@ -146,7 +146,7 @@ body {
   font-size: 1rem !important; 
   font-weight: 900 !important;
   cursor: pointer !important; 
-  flex: 1; /* Makes buttons share space equally */
+  flex: 1; 
   min-width: 100px;
 }
 
@@ -179,10 +179,10 @@ input, select {
   cursor: pointer;
 }
 
-/* LIST ITEMS & BUTTONS */
+/* LIST ITEMS & SMALLER DEL/PAID BUTTONS */
 .list-title { 
-  font-size: 1.2rem; 
-  margin: 0 0 15px 0; 
+  font-size: 1.1rem; 
+  margin: 0 0 12px 0; 
   color: #f1f5f9; 
   font-weight: 800; 
   border-bottom: 2px solid #1e293b; 
@@ -193,64 +193,72 @@ input, select {
   margin-top: 20px; 
 }
 
+/* Bill Card Item - Compact Layout */
 .bill-card-item {
   display: flex; 
   align-items: center; 
   background: #0b0f19;
-  padding: 12px; 
-  border-radius: 16px; 
-  margin-bottom: 12px; 
+  padding: 10px 12px; 
+  border-radius: 14px; 
+  margin-bottom: 10px; 
   border: 1px solid #1e293b; 
-  min-height: auto; /* Let content determine height */
-  gap: 10px;
+  gap: 12px;
+  min-height: auto;
 }
 
+/* SMALLER DELETE & PAID BUTTONS */
 .huge-action-btn {
-  height: 70px; /* Reduced height */
-  width: 80px; /* Reduced width */
+  height: 45px !important;
+  width: 55px !important;
   flex-shrink: 0; 
-  border-radius: 12px;
-  font-weight: 900; 
-  font-size: 1rem; 
+  border-radius: 10px;
+  font-weight: 800; 
+  font-size: 0.7rem; /* Smaller text to fit in small button */
   color: white; 
   border: none; 
   cursor: pointer;
   display: flex; 
   align-items: center; 
   justify-content: center;
-  flex-direction: column; /* Stack icon/text if needed */
+  flex-direction: column; 
+  line-height: 1;
+  padding: 4px;
 }
 
-.delete-bg { background-color: #ef4444; } 
-.paid-bg { background-color: #059669; }
+.delete-bg { 
+  background-color: #ef4444; 
+} 
+.paid-bg { 
+  background-color: #059669; 
+}
 
 .bill-details { 
   flex-grow: 1; 
   padding: 0; 
-  text-align: left; /* Left align for readability */
-  min-width: 0; /* Prevents flex overflow */
+  text-align: left; 
+  min-width: 0; 
 }
 
 .b-name { 
   font-weight: 800; 
-  font-size: 1rem; 
+  font-size: 0.95rem; 
   display: block; 
   color: white; 
-  word-break: break-word; /* Ensures long names wrap */
-  margin-bottom: 4px;
+  word-break: break-word;
+  margin-bottom: 2px;
 }
 
 .b-price { 
   color: #60a5fa; 
   font-weight: 900; 
-  font-size: 1.1rem; 
+  font-size: 1rem; 
   display: block;
 }
 
 .b-date { 
-  font-size: 0.8rem; 
+  font-size: 0.75rem; 
   color: #94a3b8; 
-  margin-top: 4px; 
+  margin-top: 2px; 
 }
 
 /* 12-MONTH MATRIX CHECKLIST STYLES */
@@ -269,7 +277,7 @@ input, select {
 
 .checklist-card {
   background: #0b0f19; 
-  padding: 15px; /* Reduced padding */
+  padding: 15px; 
   border-radius: 14px;
   border: 1px solid #1e293b;
   width: 100%;
@@ -285,7 +293,7 @@ input, select {
 
 .card-info-left {
   flex: 1;
-  min-width: 0; /* Critical for flex overflow */
+  min-width: 0; 
 }
 
 .cl-name { 
@@ -319,16 +327,16 @@ input, select {
   flex-shrink: 0;
 }
 
-/* 12 MONTH GRID - UPDATED TO 4 COLUMNS FOR MOBILE */
+/* 12 MONTH GRID - 4 COLUMNS FOR MOBILE */
 .month-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* CHANGED TO 4 COLUMNS */
-  gap: 6px; /* Reduced gap */
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 6px; 
 }
 
 .month-chip {
   padding: 8px 4px;
-  font-size: 0.75rem; /* Smaller text */
+  font-size: 0.75rem; 
   font-weight: 800;
   border-radius: 6px;
   text-align: center;
@@ -376,4 +384,11 @@ input, select {
   font-size: 0.95rem; 
   padding: 10px; 
   margin-bottom: 15px;
+}
+
+/* MOBILE OVERRIDE - Extra safety for very small screens */
+@media (max-width: 375px) {
+  .app-header h1 { font-size: 1.2rem; }
+  .huge-action-btn { height: 40px; width: 50px; font-size: 0.65rem; }
+  .savings-amount { font-size: 1.8rem; }
 }
